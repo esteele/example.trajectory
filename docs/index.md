@@ -1,0 +1,3 @@
+#example.trajectory
+
+User documentation

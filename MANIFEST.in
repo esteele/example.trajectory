@@ -1,0 +1,4 @@
+graft src/example
+graft docs
+include *.md
+global-exclude *.pyc

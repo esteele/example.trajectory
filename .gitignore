@@ -1,18 +1,35 @@
-*.pyc
-*.pyo
-*.tmp*
-*.mo
-*.egg
-*.EGG
+.coverage
 *.egg-info
-*.EGG-INFO
-.*.cfg
+*.log
+*.mo
+*.py?
+*.swp
+# dirs
 bin/
-build/
+buildout-cache/
 develop-eggs/
-downloads/
 eggs/
-fake-eggs/
+htmlcov/
+include/
+lib/
+local/
 parts/
-dist/
+src/*
+test.plone_addon/
 var/
+# files
+.installed.cfg
+.mr.developer.cfg
+lib64
+log.html
+output.xml
+pip-selfcheck.json
+report.html
+# excludes
+!.coveragerc
+!.editorconfig
+!.gitattributes
+!.gitignore
+!.gitkeep
+!.travis.yml
+!src/example
