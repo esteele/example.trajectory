@@ -38,6 +38,9 @@ setup(
     install_requires=[
         'plone.api',
         'setuptools',
+        'collective.trajectory',
+        'SQLAlchemy',
+        'psycopg2'
     ],
     extras_require={
         'test': [
