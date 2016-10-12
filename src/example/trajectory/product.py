@@ -23,6 +23,7 @@ def add_product(name="", description="", price=0.0):
     session = getSession()
     session.add(new_product)
     session.commit()
+    return new_product
 
 
 class ProductWrapper(Model):
