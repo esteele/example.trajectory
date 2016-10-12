@@ -8,7 +8,6 @@
 
   <include package=".browser" />
 
-
   <genericsetup:registerProfile
       name="default"
       title="example.trajectory"
@@ -30,5 +29,11 @@
   <utility
       factory=".setuphandlers.HiddenProfiles"
       name="example.trajectory-hiddenprofiles" />
+
+  <include package="collective.trajectory" />
+  <adapter factory="collective.trajectory.components.Traverser"
+             for="example.trajectory.interfaces.IProductContainer
+                  zope.publisher.interfaces.IRequest"/>
+
 
 </configure>

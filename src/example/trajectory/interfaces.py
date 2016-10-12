@@ -11,6 +11,10 @@ class IExampleTrajectoryLayer(IDefaultBrowserLayer):
     """Marker interface that defines a browser layer."""
 
 
+class IProductContainer(Interface):
+    """ """
+
+
 class IProduct(Interface):
     """ """
 

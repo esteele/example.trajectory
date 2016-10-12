@@ -21,12 +21,12 @@ class TestSetup(unittest.TestCase):
         self.assertTrue(self.installer.isProductInstalled(
             'example.trajectory'))
 
-    def test_browserlayer(self):
-        """Test that IExampleTrajectoryLayer is registered."""
-        from example.trajectory.interfaces import (
-            IExampleTrajectoryLayer)
-        from plone.browserlayer import utils
-        self.assertIn(IExampleTrajectoryLayer, utils.registered_layers())
+    def test_product_folder_created(self):
+        """Test that /products is created."""
+        from example.trajectory.interfaces import IProductContainer
+        from example.trajectory.product import PRODUCTS_FOLDER_ID
+        self.assertIn(PRODUCTS_FOLDER_ID, self.portal.objectIds())
+        self.assertTrue(IProductContainer.providedBy(self.portal[PRODUCTS_FOLDER_ID]))
 
 
 class TestUninstall(unittest.TestCase):
