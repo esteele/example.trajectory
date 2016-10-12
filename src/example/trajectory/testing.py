@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from plone.app.contenttypes.testing import PLONE_APP_CONTENTTYPES_FIXTURE
-from plone.app.robotframework.testing import REMOTE_LIBRARY_BUNDLE_FIXTURE
 from plone.app.testing import applyProfile
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
@@ -36,14 +35,4 @@ EXAMPLE_TRAJECTORY_INTEGRATION_TESTING = IntegrationTesting(
 EXAMPLE_TRAJECTORY_FUNCTIONAL_TESTING = FunctionalTesting(
     bases=(EXAMPLE_TRAJECTORY_FIXTURE,),
     name='ExampleTrajectoryLayer:FunctionalTesting'
-)
-
-
-EXAMPLE_TRAJECTORY_ACCEPTANCE_TESTING = FunctionalTesting(
-    bases=(
-        EXAMPLE_TRAJECTORY_FIXTURE,
-        REMOTE_LIBRARY_BUNDLE_FIXTURE,
-        z2.ZSERVER_FIXTURE
-    ),
-    name='ExampleTrajectoryLayer:AcceptanceTesting'
 )
