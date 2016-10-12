@@ -70,7 +70,6 @@ def initializeSqlIntegration():
                                             convert_unicode=True,
                                             echo=DEBUG,
                                             )
-            import pdb; pdb.set_trace( )
             Base.metadata.create_all(_PROFILE_ENGINE)
 
         if not _PROFILE_SESSION:
