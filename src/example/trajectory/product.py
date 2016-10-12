@@ -14,7 +14,15 @@ PRODUCTS_FOLDER_ID = 'products'
 
 
 def get_product_by_id(product_id):
-    return getSession().query(Product).filter(Product.id == product_id).scalar()
+    session = getSession()
+    return session.query(Product).filter(Product.id == product_id).scalar()
+
+
+def add_product(id, name="", description="", price=0.0):
+    new_product = Product(id=id, name=name, description=description, price=price)
+    session = getSession()
+    session.add(new_product)
+    session.commit()
 
 
 class ProductWrapper(Model):
@@ -26,7 +34,7 @@ class ProductWrapper(Model):
 
     def __init__(self, id):
         self.id = id
-        self.product = get_product_by_id(product_id)
+        self.product = get_product_by_id(id)
 
     def __repr__(self):
         return "%s(for product %s)" % (self.__class__, self.id)
