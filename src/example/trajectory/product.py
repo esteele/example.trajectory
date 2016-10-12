@@ -18,8 +18,8 @@ def get_product_by_id(product_id):
     return session.query(Product).filter(Product.id == product_id).scalar()
 
 
-def add_product(id, name="", description="", price=0.0):
-    new_product = Product(id=id, name=name, description=description, price=price)
+def add_product(name="", description="", price=0.0):
+    new_product = Product(name=name, description=description, price=price)
     session = getSession()
     session.add(new_product)
     session.commit()
