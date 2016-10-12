@@ -33,3 +33,4 @@ report.html
 !.gitkeep
 !.travis.yml
 !src/example
+/extras
