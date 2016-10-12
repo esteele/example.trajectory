@@ -3,9 +3,9 @@ import os
 from threading import RLock
 from threading import local
 
+from ZPublisher.interfaces import IPubFailure
 from ZPublisher.interfaces import IPubStart
-from ZPublisher.interfaces import IPubStartIPubFailure
-from ZPublisher.interfaces import IPubStartIPubSuccess
+from ZPublisher.interfaces import IPubSuccess
 from example.trajectory.models import Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session
@@ -36,16 +36,6 @@ _SQLA = local()
 DSN = "postgresql://postgres:example!@localhost/exampledb"
 
 
-'''
-We need to:
-  1. delay config until first request so that we can use a utility to
-     direct which connection we are
-  2. encapsulate access to these globals
-This shouldn't be in __init__ long term - leaving it here for backwards
-compat aka pure laziness.
-'''
-
-
 def getProfileSession():
     if not _PROFILE_SESSION:
         initializeSqlIntegration()
@@ -58,26 +48,6 @@ def getProfileEngine():
     return _PROFILE_ENGINE
 
 
-# def _create_database_if_missing(dsn):
-#     from copy import copy
-#     from sqlalchemy.engine.url import make_url
-#     from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-#     url = copy(make_url(dsn))
-#     database = url.database
-#     url.database = 'template1'
-#     engine = create_engine(url)
-#     query = "SELECT 1 FROM pg_database WHERE datname='%s'" % database
-#     exists = bool(engine.execute(query).scalar())
-#     if not exists:
-#         engine.raw_connection().set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-#         query = "CREATE DATABASE {0} ENCODING '{1}' TEMPLATE {2}".format(
-#             database,
-#             'utf8',
-#             'template0'
-#         )
-#         engine.execute(query)
-
-
 def initializeSqlIntegration():
     '''
     since we moved this code out of the actual init, so that we can have
@@ -88,43 +58,23 @@ def initializeSqlIntegration():
     infinite loops usually reserved for Mondays.
     '''
 
-    # Enforce UTC as our base timezone.
-    os.putenv( "PGTZ", "UTC" )
-
     with _DB_CONFIG_LOCK:
         global _PROFILE_ENGINE
         global _PROFILE_SESSION
         global DEBUG
 
         if not _PROFILE_ENGINE:
-            # _create_database_if_missing(DSN)
             _PROFILE_ENGINE = create_engine(DSN,
                                             pool_size=5,
                                             pool_recycle=3600,
                                             convert_unicode=True,
                                             echo=DEBUG,
                                             )
-            # The amp profile MUST be initialized before all the
-            # rest, whih is why we don't have a utility for it
+            import pdb; pdb.set_trace( )
             Base.metadata.create_all(_PROFILE_ENGINE)
-            # we actually need to do this with all of the
-            # classes which provide this so that everything works
-            # all dandy.
-            # initializers = zope.component.getUtilitiesFor(IAmpDatabaseConfiguration)
-            # for name, initializer in initializers:
-            #     initializer.initialize(_PROFILE_ENGINE)
 
         if not _PROFILE_SESSION:
-            '''
-            expire_on_commit is set to false at the moment because
-            we are using an in memory cache. I don't think that long
-            term this is a good decision although I'm having issues
-            finding good information on it.If things get funcky, set
-            this to True and change the beaker cache to something
-            that requires pickles like memcached or disk
-            '''
-            _PROFILE_SESSION = scoped_session(sessionmaker(bind=_PROFILE_ENGINE,
-                                                           expire_on_commit=False,))
+            _PROFILE_SESSION = scoped_session(sessionmaker(bind=_PROFILE_ENGINE))
 
 
 def initializeSession():
@@ -152,7 +102,7 @@ def getSession():
 
 
 def closeSession():
-    session = getSession(request)
+    session = getSession()
     if session:
         session.close()
 
