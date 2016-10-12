@@ -23,10 +23,10 @@ def add_product_folder(portal):
     products_folder = portal.get(folder_id)
     if not products_folder:
         products_folder = api.content.create(id=folder_id,
-                                          title=folder_title,
-                                          type="Folder",
-                                          container=portal,
-                                          safe_id=False)
+                                             title=folder_title,
+                                             type="Folder",
+                                             container=portal,
+                                             safe_id=False)
         api.content.transition(obj=products_folder, transition="publish")
     alsoProvides(products_folder, IProductContainer)
 
