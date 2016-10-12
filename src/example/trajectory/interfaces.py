@@ -11,14 +11,13 @@ class IExampleTrajectoryLayer(IDefaultBrowserLayer):
     """Marker interface that defines a browser layer."""
 
 
-class ITask(Interface):
+class IProduct(Interface):
+    """ """
 
-    title = schema.TextLine(
-        title=_(u"Title"),
-        required=True,
-    )
 
-    description = schema.Text(
-        title=_(u"Description"),
-        required=False,
-    )
+class ICustomer(Interface):
+    """ """
+
+
+class IOrder(Interface):
+    """ """
