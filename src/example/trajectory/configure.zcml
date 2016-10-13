@@ -30,6 +30,11 @@
       factory=".setuphandlers.HiddenProfiles"
       name="example.trajectory-hiddenprofiles" />
 
+  <utility
+      provides="example.trajectory.interfaces.IDatabaseLoginOptions"
+      factory="example.trajectory.initializer.LocalDatabaseLogin" />
+
+
   <include package="collective.trajectory" />
   <adapter factory="collective.trajectory.components.Traverser"
              for="example.trajectory.interfaces.IProductContainer

@@ -1,5 +1,6 @@
 import logging
 import os
+import uuid
 from threading import RLock
 from threading import local
 
@@ -11,7 +12,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
 from zope.component import adapter
+from zope.component import getGlobalSiteManager
 from zope.component import provideHandler
+from zope.interface import implements
+from example.trajectory.interfaces import IDatabaseLoginOptions
 
 
 # quickly turn on datbase debugging
@@ -33,7 +37,25 @@ _PROFILE_ENGINE = None
 _SQLA = local()
 
 
-DSN = "postgresql://postgres:example!@localhost/exampledb"
+def _create_database_if_missing(dsn):
+    from copy import copy
+    from sqlalchemy.engine.url import make_url
+    from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+    url = copy(make_url(dsn))
+    database = url.database
+    url.database = 'template1'
+    engine = create_engine(url)
+    query = "SELECT 1 FROM pg_database WHERE datname='%s'" % database
+    exists = bool(engine.execute(query).scalar())
+    if not exists:
+        engine.raw_connection().set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        query = "CREATE DATABASE {0} ENCODING '{1}' TEMPLATE {2}".format(
+            database,
+            'utf8',
+            'template0'
+        )
+        engine.execute(query)
+
 
 
 def getProfileSession():
@@ -49,6 +71,11 @@ def getProfileEngine():
 
 
 def initializeSqlIntegration():
+    gsm = getGlobalSiteManager()
+    dbconfig = gsm.queryUtility(IDatabaseLoginOptions)
+    if not dbconfig:
+        raise Exception("Could not lookup database dsn. Please check configuration")
+
     '''
     since we moved this code out of the actual init, so that we can have
     a sane configuration setup, we MUST do this with a lock. Otherwise sql
@@ -64,7 +91,8 @@ def initializeSqlIntegration():
         global DEBUG
 
         if not _PROFILE_ENGINE:
-            _PROFILE_ENGINE = create_engine(DSN,
+            _create_database_if_missing(dbconfig.dsn)
+            _PROFILE_ENGINE = create_engine(dbconfig.dsn,
                                             pool_size=5,
                                             pool_recycle=3600,
                                             convert_unicode=True,
@@ -126,3 +154,13 @@ def persistSessionOnFailure(event):
 provideHandler(configureSessionOnStart)
 provideHandler(persistSessionOnSuccess)
 provideHandler(persistSessionOnFailure)
+
+
+class TestDatabaseLogin(object):
+    implements(IDatabaseLoginOptions)
+    dsn = "postgresql://example:example!@localhost/exampledb_testing"
+
+
+class LocalDatabaseLogin(object):
+    implements(IDatabaseLoginOptions)
+    dsn = "postgresql://example:example!@localhost/exampledb"
