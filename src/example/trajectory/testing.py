@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 from plone.app.contenttypes.testing import PLONE_APP_CONTENTTYPES_FIXTURE
-from plone.app.testing import applyProfile
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import PloneSandboxLayer
-from plone.testing import z2
+from plone.app.testing import applyProfile
+from sqlalchemy import event
+from sqlalchemy.exc import OperationalError
+from sqlalchemy.schema import MetaData
 
 import example.trajectory
+from example.trajectory.initializer import getSession
 
 
 class ExampleTrajectoryLayer(PloneSandboxLayer):
@@ -18,9 +21,27 @@ class ExampleTrajectoryLayer(PloneSandboxLayer):
         # The z3c.autoinclude feature is disabled in the Plone fixture base
         # layer.
         self.loadZCML(package=example.trajectory)
+        self.loadZCML(package=example.trajectory, name='configure-test.zcml')
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'example.trajectory:default')
+
+    def testSetUp(self):
+        super(ExampleTrajectoryLayer, self).testSetUp()
+
+        self['session'] = getSession()
+        self['session'].begin_nested()
+
+        @event.listens_for(self['session'], 'after_transaction_end')
+        def restart_savepoint(session, transaction):
+            if transaction.nested and not transaction._parent.nested:
+                session.expire_all()
+                session.begin_nested()
+
+    def testTearDown(self):
+        super(ExampleTrajectoryLayer, self).testTearDown()
+        # self['session'].expire_all()
+        self['session'].close()
 
 
 EXAMPLE_TRAJECTORY_FIXTURE = ExampleTrajectoryLayer()
