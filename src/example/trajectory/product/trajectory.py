@@ -1,29 +1,15 @@
 from AccessControl import ClassSecurityInfo
 from App.class_init import InitializeClass
 from collective.trajectory.components import Model
-from example.trajectory.initializer import getSession
 from example.trajectory.interfaces import IProduct
 from example.trajectory.interfaces import IProductContainer
-from example.trajectory.models import Product
 from plone import api
 import traject
 from zope.interface import implements
+from .api import get_product_by_id
 
 
 PRODUCTS_FOLDER_ID = 'products'
-
-
-def get_product_by_id(product_id):
-    session = getSession()
-    return session.query(Product).filter(Product.id == product_id).scalar()
-
-
-def add_product(name="", description="", price=0.0):
-    new_product = Product(name=name, description=description, price=price)
-    session = getSession()
-    session.add(new_product)
-    session.commit()
-    return new_product
 
 
 class ProductWrapper(Model):
@@ -66,4 +52,3 @@ pattern = u'/:id'
 traject.register(IProductContainer, pattern, product_factory)
 traject.register_inverse(IProductContainer,
                          ProductWrapper, pattern, product_arguments)
-

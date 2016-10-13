@@ -1,0 +1,11 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="example.trajectory">
+
+  <include package="collective.trajectory" />
+  <adapter factory="collective.trajectory.components.Traverser"
+             for="example.trajectory.interfaces.IProductContainer
+                  zope.publisher.interfaces.IRequest"/>
+
+</configure>

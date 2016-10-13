@@ -7,7 +7,7 @@
   <includeDependencies package="." />
 
   <include package=".browser" />
-
+  <include package=".product" />
   <genericsetup:registerProfile
       name="default"
       title="example.trajectory"
@@ -32,13 +32,6 @@
 
   <utility
       provides="example.trajectory.interfaces.IDatabaseLoginOptions"
-      factory="example.trajectory.initializer.LocalDatabaseLogin" />
-
-
-  <include package="collective.trajectory" />
-  <adapter factory="collective.trajectory.components.Traverser"
-             for="example.trajectory.interfaces.IProductContainer
-                  zope.publisher.interfaces.IRequest"/>
-
+      factory="example.trajectory.db.LocalDatabaseLogin" />
 
 </configure>

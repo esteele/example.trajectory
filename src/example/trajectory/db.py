@@ -1,6 +1,4 @@
 import logging
-import os
-import uuid
 from threading import RLock
 from threading import local
 

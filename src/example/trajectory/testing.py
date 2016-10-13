@@ -9,7 +9,7 @@ from sqlalchemy.exc import OperationalError
 from sqlalchemy.schema import MetaData
 
 import example.trajectory
-from example.trajectory.initializer import getSession
+from example.trajectory.db import getSession
 
 
 class ExampleTrajectoryLayer(PloneSandboxLayer):

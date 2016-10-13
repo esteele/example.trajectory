@@ -4,7 +4,7 @@ from zope.interface import implementer
 from plone import api
 from zope.interface import alsoProvides
 from example.trajectory.interfaces import IProductContainer
-from example.trajectory.product import PRODUCTS_FOLDER_ID
+from example.trajectory.product.trajectory import PRODUCTS_FOLDER_ID
 
 
 @implementer(INonInstallable)

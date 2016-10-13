@@ -5,7 +5,7 @@
 
   <utility
       provides="example.trajectory.interfaces.IDatabaseLoginOptions"
-      factory="example.trajectory.initializer.TestDatabaseLogin" />
+      factory="example.trajectory.db.TestDatabaseLogin" />
 
 </configure>
 

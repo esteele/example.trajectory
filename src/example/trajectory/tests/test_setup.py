@@ -24,7 +24,7 @@ class TestSetup(unittest.TestCase):
     def test_product_folder_created(self):
         """Test that /products is created."""
         from example.trajectory.interfaces import IProductContainer
-        from example.trajectory.product import PRODUCTS_FOLDER_ID
+        from example.trajectory.product.trajectory import PRODUCTS_FOLDER_ID
         self.assertIn(PRODUCTS_FOLDER_ID, self.portal.objectIds())
         self.assertTrue(IProductContainer.providedBy(self.portal[PRODUCTS_FOLDER_ID]))
 
