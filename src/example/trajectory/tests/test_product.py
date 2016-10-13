@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Setup tests for this package."""
 from example.trajectory.testing import EXAMPLE_TRAJECTORY_INTEGRATION_TESTING  # noqa
+from example.trajectory.models import Product
+from example.trajectory.initializer import getSession
 from plone import api
 
 import unittest
@@ -19,4 +21,5 @@ class TestProduct(unittest.TestCase):
         """Test that add_product call creates products is created."""
         from example.trajectory.product import add_product
         product = add_product(name='Widget Wash', price=9.75)
-        import pdb; pdb.set_trace( )
+        self.assertEqual(getSession().query(Product).count(), 1)
+
