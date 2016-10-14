@@ -1,7 +1,7 @@
 from AccessControl import ClassSecurityInfo
 from App.class_init import InitializeClass
 from collective.trajectory.components import Model
-from example.trajectory.interfaces import IProduct
+from example.trajectory.product.model import IProduct
 from example.trajectory.interfaces import IProductContainer
 from plone import api
 import traject

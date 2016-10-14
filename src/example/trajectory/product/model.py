@@ -1,8 +1,18 @@
-from example.trajectory.interfaces import IProduct
+from example.trajectory import _
+from example.trajectory.models import Base
+from plone.supermodel import model
 from sqlalchemy import Column
 from sqlalchemy import types
+from zope import schema
 from zope.interface import implements
-from example.trajectory.models import Base
+
+
+class IProduct(model.Schema):
+    """ """
+
+    name = schema.TextLine(title=_(u'Name'), required=True)
+    description = schema.Text(title=_(u'Description'), required=False)
+    price = schema.Float(title=_(u'Price'), required=False)
 
 
 class Product(Base):
