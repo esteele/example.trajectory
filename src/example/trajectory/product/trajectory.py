@@ -34,11 +34,20 @@ InitializeClass(ProductWrapper)
 
 def product_factory(id):
     if id:
-        product = get_product_by_id(id)
-        if product:
-            portal = api.portal.get()
-            product_folder = portal[PRODUCTS_FOLDER_ID]
-            return ProductWrapper(id).__of__(product_folder)
+        portal = api.portal.get()
+        product_folder = portal[PRODUCTS_FOLDER_ID]
+        try:
+            id = int(id)
+        except ValueError:
+            # possible_view = product_folder.restrictedTraverse([id])
+            # import pdb; pdb.set_trace( )
+            # if possible_view:
+            #     return possible_view()
+            pass
+        else:
+            product = get_product_by_id(id)
+            if product:
+                return ProductWrapper(id).__of__(product_folder)
     return None
 
 

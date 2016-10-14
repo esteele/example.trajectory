@@ -25,3 +25,17 @@ class Product(Base):
     description = Column(types.Unicode())
     # photo = deferred(Column(types.LargeBinary))
     price = Column(types.Float())
+
+
+from plone.dexterity.browser import edit
+
+class EditForm(edit.DefaultEditForm):
+    pass
+
+
+from zope.publisher.browser import BrowserView
+class View(BrowserView):
+	""" """
+
+	def __call__(self, context=None, request=None):
+		return self.index()

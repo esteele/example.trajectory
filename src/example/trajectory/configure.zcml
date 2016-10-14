@@ -8,6 +8,7 @@
 
   <include package=".browser" />
   <include package=".product" />
+
   <genericsetup:registerProfile
       name="default"
       title="example.trajectory"

@@ -55,7 +55,6 @@ def _create_database_if_missing(dsn):
         engine.execute(query)
 
 
-
 def getProfileSession():
     if not _PROFILE_SESSION:
         initializeSqlIntegration()
@@ -72,7 +71,8 @@ def initializeSqlIntegration():
     gsm = getGlobalSiteManager()
     dbconfig = gsm.queryUtility(IDatabaseLoginOptions)
     if not dbconfig:
-        raise Exception("Could not lookup database dsn. Please check configuration")
+        raise Exception(
+            "Could not lookup database dsn. Please check configuration")
 
     '''
     since we moved this code out of the actual init, so that we can have
@@ -99,7 +99,8 @@ def initializeSqlIntegration():
             Base.metadata.create_all(_PROFILE_ENGINE)
 
         if not _PROFILE_SESSION:
-            _PROFILE_SESSION = scoped_session(sessionmaker(bind=_PROFILE_ENGINE))
+            _PROFILE_SESSION = scoped_session(
+                sessionmaker(bind=_PROFILE_ENGINE))
 
 
 def initializeSession():
