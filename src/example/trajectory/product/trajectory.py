@@ -27,7 +27,7 @@ class ProductWrapper(Model):
         return "%s(for product %s)" % (self.__class__, self.id)
 
     def Title(self):
-        return self.product.title
+        return self.product.name
 
 InitializeClass(ProductWrapper)
 
