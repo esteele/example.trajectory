@@ -9,8 +9,7 @@
              for="example.trajectory.interfaces.IProductContainer
                   zope.publisher.interfaces.IRequest"/>
 
-
-<!--     <browser:defaultView
+    <browser:defaultView
         name="view"
         for="example.trajectory.product.model.IProduct"
         layer="example.trajectory.interfaces.IExampleTrajectoryLayer"
@@ -24,7 +23,6 @@
         layer="example.trajectory.interfaces.IExampleTrajectoryLayer"
         template="view.pt"
         />
- -->
 
     <browser:page
         name="edit"
