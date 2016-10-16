@@ -32,4 +32,25 @@
         layer="example.trajectory.interfaces.IExampleTrajectoryLayer"
         />
 
+    <include package="plone.app.contentlisting" />
+    <adapter factory="example.trajectory.product.trajectory.ProductListing"
+             for="example.trajectory.product.model.IProduct" />
+
+    <browser:page
+          name="contentlisting"
+          class=".trajectory.ContentListing"
+          permission="zope2.View"
+          for="example.trajectory.interfaces.IProductContainer"
+          />
+
+<!-- 
+    <browser:page
+        name="view"
+        for="example.trajectory.interfaces.IProductContainer"
+        class="example.trajectory.product.model.ProductListingView"
+        permission="zope2.View"
+        layer="example.trajectory.interfaces.IExampleTrajectoryLayer"
+        template="listing.pt"
+        />
+ -->
 </configure>

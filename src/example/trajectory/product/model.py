@@ -5,6 +5,8 @@ from sqlalchemy import Column
 from sqlalchemy import types
 from zope import schema
 from zope.interface import implements
+from plone.dexterity.browser import edit
+from zope.publisher.browser import BrowserView
 
 
 class IProduct(model.Schema):
@@ -27,15 +29,15 @@ class Product(Base):
     price = Column(types.Float())
 
 
-from plone.dexterity.browser import edit
 
 class EditForm(edit.DefaultEditForm):
     pass
 
 
-from zope.publisher.browser import BrowserView
 class View(BrowserView):
-	""" """
+    """ """
 
-	def __call__(self, context=None, request=None):
-		return self.index()
+
+class ProductListingView(BrowserView):
+    """ """
+
