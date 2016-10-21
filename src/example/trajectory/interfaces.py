@@ -17,11 +17,3 @@ class IExampleTrajectoryLayer(IDefaultBrowserLayer):
 
 class IProductContainer(Interface):
     """ """
-
-
-class ICustomer(Interface):
-    """ """
-
-
-class IOrder(Interface):
-    """ """

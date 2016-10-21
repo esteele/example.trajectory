@@ -1,3 +1,6 @@
+from copy import copy
+from sqlalchemy.engine.url import make_url
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from datetime import datetime
 from datetime import time
 import logging
@@ -28,7 +31,6 @@ DEBUG = False
 logging.basicConfig()
 
 if DEBUG:
-    # We don't need this for day to day but leaving it here for quick access
     logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
     logging.getLogger('sqlalchemy.pool').setLevel(logging.DEBUG)
 
@@ -40,9 +42,6 @@ _SQLA = local()
 
 
 def _create_database_if_missing(dsn):
-    from copy import copy
-    from sqlalchemy.engine.url import make_url
-    from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
     url = copy(make_url(dsn))
     database = url.database
     url.database = 'template1'
@@ -78,9 +77,12 @@ def initializeSqlIntegration():
         raise Exception(
             "Could not lookup database dsn. Please check configuration")
 
+    # Enforce UTC as our base timezone. See UTCDateTime class below.
+    os.putenv("PGTZ", "UTC")
+
     '''
-    since we moved this code out of the actual init, so that we can have
-    a sane configuration setup, we MUST do this with a lock. Otherwise sql
+    eleddy: since we moved this code out of the actual init, so that we can
+    have a sane configuration setup, we MUST do this with a lock. Otherwise sql
     alchemy loses its shit and goes on a 'fuck you muli-threading - I'll eat
     pancakes on your grave!' tirade. Then you spend your friday
     night sober and staring at an abyss of configuration headaches and
@@ -109,10 +111,7 @@ def initializeSqlIntegration():
 
 def initializeSession():
     """
-    Create a session local to a thread. Historically this was on
-    the request object. Turns out this was a terrible idea since
-    plone has a gabillion requests per request, and there is no
-    guaruntee that one can get the request from certain threads.
+    Create a session local to a thread.
 
     Also note that for some reason, in 4.2, this access is happening
     from the dummy startup thread, and not the main thread. I have no
@@ -170,7 +169,16 @@ class LocalDatabaseLogin(object):
 
 
 class UTCDateTime(types.TypeDecorator):
-    """A datetime type that stores only UTC datetimes."""
+    """A datetime type that stores only UTC datetimes.
+
+    PostgreSQL does this wonderful thing where it automatically converts
+    all dateimes to the server-local timezone. Which, is ok, I suppose,
+    but this is a web application and our database server isn't always
+    in the same location as our users. So, we force Postgres to use UTC as
+    its timezone and then enforce saving all datetimes as UTC.
+
+    Timezones are fun.
+    """
 
     impl = types.DateTime
 

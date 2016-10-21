@@ -1,6 +1,7 @@
 from example.trajectory.models import Base
 from example.trajectory.customer.model import Customer
 from example.trajectory.product.model import Product
+from plone.supermodel import model
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy import types
@@ -9,6 +10,10 @@ from sqlalchemy.orm import relationship
 
 from example.trajectory.db import UTCDateTime
 from example.trajectory.db import utcnow
+
+
+class IOrder(model.Schema):
+    """ """
 
 
 class Order(Base):

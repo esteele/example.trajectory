@@ -1,7 +1,7 @@
 from Acquisition import aq_base
-from Acquisition import aq_get
 from example.trajectory import _
 from example.trajectory.db import getSession
+from example.trajectory.product.api import add_product
 from example.trajectory.product.model import IProduct
 from example.trajectory.product.model import Product
 from example.trajectory.product.trajectory import get_wrapped_product
@@ -21,12 +21,10 @@ class AddForm(form.AddForm):
     fields = field.Fields(IProduct)
 
     def create(self, data):
-        from example.trajectory.product.api import add_product
         return add_product(**data)
 
-    def add(self, object):
-        from example.trajectory.product.trajectory import product_factory
-        self.wrapper = product_factory(object.id)
+    def add(self, obj):
+        self.wrapper = get_wrapped_product(obj)
 
     def nextURL(self):
         return self.wrapper.absolute_url()
@@ -76,6 +74,11 @@ class View(BrowserView):
 
 
 class ContentListing(BrowserView):
+    """Custom content listing view for the products folder.
+
+    Get the list of "contained" Products via a SQLAlchemy search.
+    """
+
     def __call__(self, batch=False, b_size=20, b_start=0, orphan=0, **kw):
         results = getSession().query(Product).all()
         return IContentListing(results)[b_start:b_size]
@@ -83,7 +86,13 @@ class ContentListing(BrowserView):
 
 @implementer(IContentListingObject)
 class ProductListing(BaseContentListingObject):
-    """ """
+    """Provide a an adapter so that Products can list themselves in product
+    listings.
+
+    This doesn't implement everything defined by IContentListingObject, purely
+    for simplicity's sake. For now, we'll just return None for those.
+    """
+
     def __init__(self, obj):
         self._object = obj
         self._wrapped = get_wrapped_product(obj)
@@ -92,6 +101,7 @@ class ProductListing(BaseContentListingObject):
         """We'll override getattr so that we can defer name lookups to the real
         underlying objects without knowing the names of all attributes.
         """
+
         if name.startswith('_'):
             raise AttributeError(name)
         if hasattr(aq_base(self._object), name):
@@ -99,8 +109,9 @@ class ProductListing(BaseContentListingObject):
         if hasattr(aq_base(self._wrapped), name):
             return getattr(self._wrapped, name)
         else:
-            # Otherwise, we really don't care.
+            # Otherwise, we really don't care, at least for demo purposes.
             return None
+            # But really, we should...
             # raise AttributeError(name)
 
     def PortalType(self):

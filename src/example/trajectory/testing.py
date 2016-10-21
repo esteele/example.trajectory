@@ -29,6 +29,8 @@ class ExampleTrajectoryLayer(PloneSandboxLayer):
     def testSetUp(self):
         super(ExampleTrajectoryLayer, self).testSetUp()
 
+        # Begin a nested transaction, that we can roll back after each test,
+        # and start the next with a clean database.
         self['session'] = getSession()
         self['session'].begin_nested()
 

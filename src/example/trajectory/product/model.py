@@ -8,7 +8,7 @@ from zope.interface import implements
 
 
 class IProduct(model.Schema):
-    """ """
+    """"""
 
     name = schema.TextLine(title=_(u'Name'), required=True)
     description = schema.Text(title=_(u'Description'), required=False)
@@ -27,4 +27,3 @@ class Product(Base):
 
     def __repr__(self):
         return "<%s %s(%s)>" % (self.__class__.__name__, self.name, self.id)
-

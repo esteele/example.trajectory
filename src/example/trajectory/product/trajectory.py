@@ -12,7 +12,9 @@ PRODUCTS_FOLDER_ID = 'products'
 
 
 class ProductWrapper(ExampleBase):
-    """ """
+    """A simple object representing the SQLAlchemy content within the Plone
+    context.
+    """
     implements(IProduct)
 
     portal_type = 'Product'
@@ -34,6 +36,9 @@ InitializeClass(ProductWrapper)
 
 
 def get_wrapped_product(product):
+    """Acquisition wrap the Product object so that it's within the context of
+    the products folder.
+    """
     product_folder = api.portal.get()[PRODUCTS_FOLDER_ID]
     return ProductWrapper(product.id).__of__(product_folder)
 

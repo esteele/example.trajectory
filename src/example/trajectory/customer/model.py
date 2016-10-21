@@ -1,15 +1,16 @@
 from example.trajectory.db import Base
-from example.trajectory.interfaces import ICustomer
+from plone.supermodel import model
 from sqlalchemy import Column
 from sqlalchemy import types
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm import synonym
-from zope.interface import implements
+
+
+class ICustomer(model.Schema):
+    """ """
 
 
 class Customer(Base):
-    implements(ICustomer)
-
     __tablename__ = 'customers'
 
     id = Column(types.Integer, primary_key=True)
@@ -31,7 +32,8 @@ class Customer(Base):
 
     @declared_attr
     def fullname(cls):
-        return synonym('_fullname', descriptor=property(cls.get_fullname, cls.set_fullname))
+        return synonym('_fullname',
+                       descriptor=property(cls.get_fullname, cls.set_fullname))
 
     # We want fullname to be reset whenever first, or last
     # are changed.
@@ -44,7 +46,8 @@ class Customer(Base):
 
     @declared_attr
     def firstname(cls):
-        return synonym('_firstname', descriptor=property(cls.get_firstname, cls.set_firstname))
+        return synonym('_firstname',
+                       descriptor=property(cls.get_firstname, cls.set_firstname))
 
     def get_lastname(self):
         return self._lastname
@@ -55,12 +58,13 @@ class Customer(Base):
 
     @declared_attr
     def lastname(cls):
-        return synonym('_lastname', descriptor=property(cls.get_lastname, cls.set_lastname))
+        return synonym('_lastname',
+                       descriptor=property(cls.get_lastname, cls.set_lastname))
 
     def getFullName(self):
         """
-        Returns the user's first and last name. If those are empty, return
-        the user id for display purposes.
+        Returns the customer's first and last name. If those are empty, return
+        the customer's id for display purposes.
         """
         if self.firstname or self.lastname:
             return "%s %s" % (self.firstname, self.lastname)

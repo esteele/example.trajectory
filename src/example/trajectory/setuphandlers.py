@@ -11,7 +11,7 @@ from example.trajectory.product.trajectory import PRODUCTS_FOLDER_ID
 class HiddenProfiles(object):
 
     def getNonInstallableProfiles(self):
-        """Hide uninstall profile from site-creation and quickinstaller"""
+        """Hide uninstall profile from site-creation and quickinstaller."""
         return [
             'example.trajectory:uninstall',
         ]
@@ -28,17 +28,21 @@ def add_product_folder(portal):
                                              container=portal,
                                              safe_id=False)
         api.content.transition(obj=products_folder, transition="publish")
+    # Apply the IProductContainer marker interface so that we can adapt it
+    # for trajectory.
     alsoProvides(products_folder, IProductContainer)
+    # Manually set the default layout for this folder. The display menu doesn't
+    # work just yet.
     products_folder.setLayout('@@listing_view')
 
 
 def post_install(context):
-    """Post install script"""
+    """Post install script."""
     # Do something at the end of the installation of this package.
     portal = api.portal.get()
     add_product_folder(portal)
 
 
 def uninstall(context):
-    """Uninstall script"""
+    """Uninstall script."""
     # Do something at the end of the uninstallation of this package.
