@@ -23,6 +23,13 @@ class TestProduct(unittest.TestCase):
         product = add_product(name='Widget Wash', price=9.75)
         self.assertEqual(getSession().query(Product).count(), 1)
 
+    # def test_views(self):
+    #     from example.trajectory.product.api import add_product
+    #     product = add_product(name='Widget Wash', price=9.75)
+    #     from example.trajectory.product.trajectory import product_factory
+    #     obj = product_factory(product.id)
+    #     context_state = api.content.get_view(context=obj, request=self.layer['request'], name=u'plone_context_state')
+
 
 class TestProductFolder(unittest.TestCase):
 
@@ -43,12 +50,11 @@ class TestProductFolder(unittest.TestCase):
         listing = IContentListingObject(wrapper)
         self.assertEqual(listing.Title(), u'Widget Wash')
 
-    def test_product_folder_listing(self):
-        from example.trajectory.product.api import add_product
-        from example.trajectory.product.trajectory import product_factory
-        from plone.app.contentlisting.interfaces import IContentListing
-        product = add_product(name='Widget Wash', price=9.75)
-        wrapper = product_factory(product.id)
-        listing = self.product_folder.restrictedTraverse('@@contentlisting')
-        # listing = IContentListing(self.product_folder)
-        import pdb; pdb.set_trace( )
+    # def test_product_folder_listing(self):
+    #     from example.trajectory.product.api import add_product
+    #     from example.trajectory.product.trajectory import product_factory
+    #     from plone.app.contentlisting.interfaces import IContentListing
+    #     product = add_product(name='Widget Wash', price=9.75)
+    #     wrapper = product_factory(product.id)
+    #     listing = self.product_folder.restrictedTraverse('@@contentlisting')
+    #     # listing = IContentListing(self.product_folder)

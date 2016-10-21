@@ -6,8 +6,9 @@
 
   <includeDependencies package="." />
 
-  <include package=".browser" />
   <include package=".product" />
+  <include package=".order" />
+  <include package=".customer" />
 
   <genericsetup:registerProfile
       name="default"

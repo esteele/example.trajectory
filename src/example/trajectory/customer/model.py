@@ -1,4 +1,4 @@
-from example.trajeectory.models import Base
+from example.trajectory.db import Base
 from example.trajectory.interfaces import ICustomer
 from sqlalchemy import Column
 from sqlalchemy import types
@@ -64,10 +64,13 @@ class Customer(Base):
         """
         if self.firstname or self.lastname:
             return "%s %s" % (self.firstname, self.lastname)
-        return self.plone_id
+        return self.id
 
     def getSortableName(self):
         """ Return the user's name in lastname firstname format so that
             for sorting purposes.
         """
         return "%s %s" % (self.lastname, self.firstname)
+
+    def __repr__(self):
+        return "<%s %s(%s)>" % (self.__class__.__name__, self.getFullName(), self.id)

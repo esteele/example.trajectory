@@ -18,7 +18,7 @@
     <browser:page
         name="view"
         for="example.trajectory.product.model.IProduct"
-        class="example.trajectory.product.model.View"
+        class="example.trajectory.product.browser.View"
         permission="zope2.View"
         layer="example.trajectory.interfaces.IExampleTrajectoryLayer"
         template="view.pt"
@@ -27,30 +27,33 @@
     <browser:page
         name="edit"
         for="example.trajectory.product.model.IProduct"
-        class="example.trajectory.product.model.EditForm"
-        permission="cmf.AddPortalContent"
+        class=".browser.EditView"
+        permission="cmf.ModifyPortalContent"
         layer="example.trajectory.interfaces.IExampleTrajectoryLayer"
         />
 
+    <browser:page
+        name="add-product"
+        class=".browser.AddView"
+        permission="cmf.AddPortalContent"
+        for="example.trajectory.interfaces.IProductContainer" />
+
+
     <include package="plone.app.contentlisting" />
-    <adapter factory="example.trajectory.product.trajectory.ProductListing"
+    <adapter factory="example.trajectory.product.browser.ProductListing"
              for="example.trajectory.product.model.IProduct" />
 
     <browser:page
           name="contentlisting"
-          class=".trajectory.ContentListing"
+          class=".browser.ContentListing"
           permission="zope2.View"
           for="example.trajectory.interfaces.IProductContainer"
           />
-
-<!-- 
     <browser:page
-        name="view"
-        for="example.trajectory.interfaces.IProductContainer"
-        class="example.trajectory.product.model.ProductListingView"
+        name="folderListing"
+        class=".browser.ContentListing"
         permission="zope2.View"
-        layer="example.trajectory.interfaces.IExampleTrajectoryLayer"
-        template="listing.pt"
+        for="example.trajectory.interfaces.IProductContainer"
         />
- -->
+
 </configure>

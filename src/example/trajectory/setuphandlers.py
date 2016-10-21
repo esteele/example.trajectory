@@ -29,6 +29,7 @@ def add_product_folder(portal):
                                              safe_id=False)
         api.content.transition(obj=products_folder, transition="publish")
     alsoProvides(products_folder, IProductContainer)
+    products_folder.setLayout('@@listing_view')
 
 
 def post_install(context):

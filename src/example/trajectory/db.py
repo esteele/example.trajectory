@@ -1,3 +1,5 @@
+from datetime import datetime
+from datetime import time
 import logging
 from threading import RLock
 from threading import local
@@ -5,15 +7,17 @@ from threading import local
 from ZPublisher.interfaces import IPubFailure
 from ZPublisher.interfaces import IPubStart
 from ZPublisher.interfaces import IPubSuccess
+from example.trajectory.interfaces import IDatabaseLoginOptions
 from example.trajectory.models import Base
+from pytz import UTC
 from sqlalchemy import create_engine
+from sqlalchemy import types
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
 from zope.component import adapter
 from zope.component import getGlobalSiteManager
 from zope.component import provideHandler
 from zope.interface import implements
-from example.trajectory.interfaces import IDatabaseLoginOptions
 
 
 # quickly turn on datbase debugging
@@ -163,3 +167,34 @@ class TestDatabaseLogin(object):
 class LocalDatabaseLogin(object):
     implements(IDatabaseLoginOptions)
     dsn = "postgresql://example:example!@localhost/exampledb"
+
+
+class UTCDateTime(types.TypeDecorator):
+    """A datetime type that stores only UTC datetimes."""
+
+    impl = types.DateTime
+
+    def process_bind_param(self, value, engine):
+        if value is not None:
+            # If we're passed a date, convert it to a datetime, at time 00:00
+            if not hasattr(value, 'tzinfo'):
+                return UTC.localize(datetime.combine(value, time()))
+            try:
+                return value.astimezone(UTC)
+            except ValueError:
+                raise ValueError(
+                    "UTCDateTime field was passed a non-UTC datetime")
+
+    def process_result_value(self, value, engine):
+        if value is not None:
+            return UTC.localize(datetime(value.year,
+                                         value.month,
+                                         value.day,
+                                         value.hour,
+                                         value.minute,
+                                         value.second,
+                                         value.microsecond))
+
+
+def utcnow():
+    return UTC.localize(datetime.now())
