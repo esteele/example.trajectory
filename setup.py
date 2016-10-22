@@ -12,7 +12,7 @@ long_description = '\n\n'.join([
 
 setup(
     name='example.trajectory',
-    version='1.0.2',
+    version='1.0.3.dev0',
     description="An add-on for Plone",
     long_description=long_description,
     # Get more from https://pypi.python.org/pypi?%3Aaction=list_classifiers
