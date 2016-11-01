@@ -2,8 +2,8 @@ from App.class_init import InitializeClass
 from example.trajectory.interfaces import IProductContainer
 from example.trajectory.product.api import get_product_by_id
 from example.trajectory.product.model import IProduct
-from example.trajectory.trajectory import ExampleBase
 from plone import api
+from collective.trajectory import Model
 import traject
 from zope.interface import implements
 
@@ -11,7 +11,7 @@ from zope.interface import implements
 PRODUCTS_FOLDER_ID = 'products'
 
 
-class ProductWrapper(ExampleBase):
+class ProductWrapper(Model):
     """A simple object representing the SQLAlchemy content within the Plone
     context.
     """

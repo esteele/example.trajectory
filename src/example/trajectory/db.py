@@ -6,6 +6,7 @@ from datetime import time
 import logging
 from threading import RLock
 from threading import local
+import os
 
 from ZPublisher.interfaces import IPubFailure
 from ZPublisher.interfaces import IPubStart
